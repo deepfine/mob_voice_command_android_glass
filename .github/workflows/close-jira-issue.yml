@@ -1,0 +1,10 @@
+name: Close Jira issue
+on:
+  issues:
+    types:
+      - closed
+
+jobs:
+  call:
+    uses: deepfine/mob_github_workflows_android/.github/workflows/close-jira-issue.yml@main
+    secrets: inherit

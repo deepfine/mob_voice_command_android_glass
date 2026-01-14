@@ -1,0 +1,14 @@
+name: Close Github issue
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  issues: write
+  pull-requests: read
+
+jobs:
+  call:
+    uses: deepfine/mob_github_workflows_android/.github/workflows/close-github-issue.yml@main
+    secrets: inherit

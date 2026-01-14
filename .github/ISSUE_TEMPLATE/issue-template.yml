@@ -1,0 +1,94 @@
+name: '이슈 생성'
+description: 'Repo에 이슈를 생성하며, 생성된 이슈는 Jira와 연동됩니다.'
+labels: [ feat ]
+title: '이슈 이름을 작성해주세요'
+body:
+  - type: input
+    id: parentKey
+    attributes:
+      label: '🎟️ 상위 작업 (Epic ID)'
+      description: '상위 작업의 Epic ID를 기입해주세요.'
+      value: 'DF-7'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: '🏷 타입 (Type)'
+      description: '현재 작업의 타입을 설정해주세요'
+      multiple: false
+      options:
+        - Feature
+        - Fix
+        - Refactor
+        - Chore
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: assignee
+    attributes:
+      label: '🧑🏻‍💻 담당자 (Assignee)'
+      description: '현재 작업의 담당자를 지정해주세요'
+      multiple: false
+      options:
+        - 박예찬
+        - 왕혜찬
+        - 허세라
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: '🌡 우선 순위 (Priority)'
+      description: '현재 작업의 우선 순위를 설정해주세요'
+      multiple: false
+      options:
+        - Highest
+        - High
+        - Medium
+        - Low
+        - Lowest
+      default: 2
+    validations:
+      required: true
+
+  - type: input
+    id: dueDate
+    attributes:
+      label: '🗓️ 마감일'
+      placeholder: '2026-01-01'
+      description: '마감일을 작성해주세요'
+    validations:
+      required: false
+
+  - type: input
+    id: branch
+    attributes:
+      label: '🌳 브랜치명 (Branch)'
+      description: '영어로 브랜치명을 작성해주세요'
+    validations:
+      required: true
+
+  - type: input
+    id: description
+    attributes:
+      label: '📝 상세 내용 (Description)'
+      description: '이슈에 대해서 간략히 설명해주세요'
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: '✅ 체크리스트 (Tasks)'
+      description: '해당 이슈에 대해 필요한 작업목록을 작성해주세요'
+      value: |
+        - [ ] Task1
+        - [ ] Task2
+    validations:
+      required: false

@@ -1,0 +1,98 @@
+[versions]
+applicationName = "DeepFine"
+applicationId = "com.deepfine.android"
+minSdk = "24"
+targetSdk = "36"
+compileSdk = "36"
+versionCode = "1"
+versionName = "1.0.0"
+
+kotlin = "2.2.21"
+kotlinSerialization = "1.9.0"
+ksp = "2.3.3"
+multidex = "2.0.1"
+coreKtx = "1.17.0"
+activityCompose = "1.12.2"
+composeBom = "2025.12.01"
+composeNavigation3 = "1.0.0"
+composeNavigation3-viewModel = "2.10.0"
+composeExtensions = "25.5.1"
+coroutine = "1.10.2"
+ktor = "3.3.3"
+immutable = "0.4.0"
+sandwich = "2.2.0"
+hilt = "2.57.2"
+hiltNavigation = "1.3.0"
+bottomSheetNavigator = "1.1.2"
+spotless = "8.1.0"
+splash = "1.2.0"
+lifecycleRuntimeCompose = "2.10.0"
+agp = "8.13.2"
+
+[libraries]
+# Android
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
+splashScreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash" }
+
+# Compose
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+androidx-compose-animation = { group = "androidx.compose.animation", name = "animation" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "composeNavigation3" }
+androidx-compose-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "composeNavigation3" }
+androidx-compose-navigation3-viewModel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "composeNavigation3-viewModel" }
+
+androidx-hiltNavigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
+compose-extensions = { group = "tech.thdev", name = "extensions-compose-system-ui-controller", version.ref = "composeExtensions" }
+androidx-lifecycleRuntimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
+
+# Kotlin
+kotlinx-coroutine-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
+kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable" }
+kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
+
+# Network
+ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-logging = { group = "io.ktor", name = "ktor-client-logging-jvm", version.ref = "ktor" }
+ktor-contentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+sandwich = { group = "com.github.skydoves", name = "sandwich-ktor", version.ref = "sandwich" }
+
+# DI
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-javax = { group = "javax.inject", name = "javax.inject", version = "1" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+
+# Gradle Plugins
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+compose-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+
+[bundles]
+compose = ["androidx-compose-foundation", "androidx-compose-material3", "androidx-compose-runtime", "androidx-compose-ui", "androidx-compose-ui-graphics", "androidx-compose-ui-tooling", "androidx-compose-ui-tooling-preview", "androidx-compose-activity", "androidx-compose-navigation3-runtime", "androidx-compose-navigation3-ui", "androidx-hiltNavigationCompose", "compose-extensions", "androidx-compose-animation", "androidx-lifecycleRuntimeCompose"]
+ktor = ["ktor-okhttp", "ktor-serialization", "ktor-serialization-kotlinx-json", "ktor-contentNegotiation", "ktor-logging", "sandwich"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+deepfine-presentation = { id = "com.deepfine.presentation.plugin" }
+deepfine-android = { id = "com.deepfine.android.plugin" }
+deepfine-hilt = { id = "com.deepfine.hilt.plugin" }
+deepfine-compose = { id = "com.deepfine.compose.plugin" }

@@ -1,0 +1,10 @@
+name: Create Jira issue
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  call:
+    uses: deepfine/mob_github_workflows_android/.github/workflows/create-jira-issue.yml@main
+    secrets: inherit
