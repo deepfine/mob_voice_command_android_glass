@@ -8,7 +8,7 @@ body:
     attributes:
       label: '🎟️ 상위 작업 (Epic ID)'
       description: '상위 작업의 Epic ID를 기입해주세요.'
-      value: 'DF-7'
+      value: 'DF-31'
     validations:
       required: true
 
