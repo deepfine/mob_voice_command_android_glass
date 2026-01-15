@@ -29,17 +29,4 @@ dependencyResolutionManagement {
 
 include(
   ":app",
-  ":buildconfig",
-  ":buildconfig-stub",
-  ":data-api",
-  ":data-api:network-api",
-  ":data-impl",
-  ":data-impl:network-impl",
-  ":navigator",
-  ":presentation",
-  ":presentation:scheme",
-  ":presentation:main:api",
-  ":presentation:main:impl"
 )
-
-gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))

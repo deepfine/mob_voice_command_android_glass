@@ -1,7 +1,6 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
-  alias(libs.plugins.hilt)
   alias(libs.plugins.ksp)
 }
 
@@ -15,21 +14,8 @@ android {
     targetSdk = libs.versions.targetSdk.get().toInt()
     versionCode = libs.versions.versionCode.get().toInt()
     versionName = libs.versions.versionName.get()
-  }
 
-  flavorDimensions.add("api")
-
-  productFlavors {
-    // 개발계
-    create("dev") {
-      resValue("string", "app_name", libs.versions.applicationName.get())
-      resValue("string", "applicationId", libs.versions.applicationId.get() + applicationIdSuffix)
-    }
-
-    create("prod") {
-      resValue("string", "app_name", libs.versions.applicationName.get())
-      resValue("string", "applicationId", libs.versions.applicationId.get())
-    }
+    resValue("string", "app_name", libs.versions.applicationName.get())
   }
 
   buildTypes {
@@ -57,14 +43,7 @@ android {
 }
 
 dependencies {
-  implementation(projects.buildconfig)
-  implementation(projects.presentation.scheme)
-  implementation(projects.presentation.main.impl)
-
   implementation(libs.androidx.core.ktx)
   implementation(libs.multidex)
-  implementation(libs.hilt)
   implementation(libs.splashScreen)
-
-  ksp(libs.hilt.compiler)
 }
