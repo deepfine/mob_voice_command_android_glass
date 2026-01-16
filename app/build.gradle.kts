@@ -1,7 +1,7 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
-  alias(libs.plugins.ksp)
+  alias(libs.plugins.deepfine.compose)
 }
 
 android {
@@ -43,7 +43,9 @@ android {
 }
 
 dependencies {
+  implementation(libs.androidx.appcompat)
   implementation(libs.androidx.core.ktx)
-  implementation(libs.multidex)
   implementation(libs.splashScreen)
+
+  implementation(projects.voicecommand)
 }
