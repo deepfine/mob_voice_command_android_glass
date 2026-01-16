@@ -1,2 +1,12 @@
 <resources>
+    <string name="main_guide1">“옵션”, “설정” 이라고 말해보세요</string>
+    <string name="main_option">옵션</string>
+    <string name="main_settings">설정</string>
+    <string name="main_settings_click_message">설정 화면으로 이동합니다</string>
+    <string name="main_guide2">“1번 선택”, “2번 선택” 이라고 말해보세요</string>
+    <string name="main_item">%d번째 항목입니다</string>
+    <string name="main_item_click_message">%d번 항목을 선택했습니다</string>
+    <string name="main_item_keyword">%d번 선택</string>
+    <string name="main_page_up">위로</string>
+    <string name="main_page_down">아래로</string>
 </resources>
