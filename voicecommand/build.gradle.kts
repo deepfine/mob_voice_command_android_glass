@@ -1,5 +1,19 @@
 plugins {
   alias(libs.plugins.deepfine.presentation)
+  alias(libs.plugins.maven.publish)
+}
+
+afterEvaluate {
+  publishing {
+    publications {
+      create<MavenPublication>("release") {
+        from(components["release"])
+        groupId = "com.github.deepfine"
+        artifactId = "voicecommand-android-glass"
+        version = libs.versions.versionName.get()
+      }
+    }
+  }
 }
 
 android {

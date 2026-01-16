@@ -98,3 +98,4 @@ deepfine-presentation = { id = "com.deepfine.presentation.plugin" }
 deepfine-android = { id = "com.deepfine.android.plugin" }
 deepfine-hilt = { id = "com.deepfine.hilt.plugin" }
 deepfine-compose = { id = "com.deepfine.compose.plugin" }
+maven-publish = { id = "maven-publish" }
