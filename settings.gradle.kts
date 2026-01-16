@@ -29,4 +29,5 @@ dependencyResolutionManagement {
 
 include(
   ":app",
+  ":voicecommand",
 )
