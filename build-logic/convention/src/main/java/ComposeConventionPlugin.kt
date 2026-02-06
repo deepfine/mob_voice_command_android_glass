@@ -1,4 +1,5 @@
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
@@ -23,7 +24,7 @@ internal interface ComposeConvention : Plugin<Project> {
         )
       }
 
-      extensions.getByType<BaseExtension>().apply {
+      extensions.getByType<ApplicationExtension>().apply {
         buildFeatures.compose = true
       }
 

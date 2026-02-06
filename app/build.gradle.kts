@@ -1,12 +1,15 @@
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.deepfine.compose)
 }
 
 android {
   namespace = libs.versions.applicationId.get()
   compileSdk = libs.versions.compileSdk.get().toInt()
+
+  buildFeatures {
+    resValues = true
+  }
 
   defaultConfig {
     applicationId = libs.versions.applicationId.get()
@@ -24,7 +27,6 @@ android {
       isMinifyEnabled = false
       isShrinkResources = false
       splits.abi.isEnable = false
-      aaptOptions.cruncherEnabled = false
     }
 
     release {
