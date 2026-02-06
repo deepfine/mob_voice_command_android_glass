@@ -27,43 +27,67 @@ jobs:
           distribution: zulu
           java-version: 17
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Make Gradle executable
         run: |
-          sed -i '' 's/\r$//' gradlew
+          tr -d '\r' < gradlew > gradlew.tmp && mv gradlew.tmp gradlew
           chmod +x ./gradlew
 
       - name: Build app bundle release (AAB) - ${{ env.main_project_module }} module
-        run: ./gradlew ${{ env.main_project_module }}:bundleProdRelease
+        run: ./gradlew ${{ env.main_project_module }}:bundleRelease
 
       - name: Upload AAB (App Bundle) Release - ${{ env.repository_name }}
         uses: actions/upload-artifact@v6
         with:
           name: ${{ env.date_today }} - ${{ env.repository_name }} - App bundle(s) AAB release generated
-          path: ${{ env.main_project_module }}/build/outputs/bundle/prodRelease/
+          path: ${{ env.main_project_module }}/build/outputs/bundle/release/
 
       - name: Locate AAB file
         id: find_aab
         shell: bash
         run: |
-          AAB=$(ls ${{ env.main_project_module }}/build/outputs/bundle/prodRelease/*.aab | head -n 1)
+          AAB=$(ls ${{ env.main_project_module }}/build/outputs/bundle/release/*.aab | head -n 1)
           if [ -z "$AAB" ]; then
             echo "No AAB found"; exit 1
           fi
           echo "AAB_PATH=$AAB" >> $GITHUB_ENV
           echo "aab_path=$AAB" >> $GITHUB_OUTPUT
 
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.2
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_branches: release
+      - name: Extract version from libs.versions.toml
+        id: extract_version
+        shell: bash
+        run: |
+          VERSION="v$(grep -E '^versionName\s*=' gradle/libs.versions.toml \
+            | sed -E 's/.* = \s*"([^"]+)".*/\1/')"
+
+          if [ -z "$VERSION" ]; then
+            echo "❌ versionName not found"
+            exit 1
+          fi
+
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create and push git tag
+        run: |
+          TAG="${{ env.VERSION }}"
+          
+          if git ls-remote --tags origin | grep -q "refs/tags/$TAG$"; then
+            echo "❌ Remote tag $TAG already exists"
+            exit 1
+          fi
+          
+          git tag "$TAG"
+          git push origin "$TAG"
+
 
       - name: Create GitHub Release and upload AAB
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          tag_name: ${{ env.VERSION }}
+          name: Release ${{ env.VERSION }}
           generate_release_notes: true
           draft: false
           prerelease: false
