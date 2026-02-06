@@ -23,7 +23,6 @@ ktlint_standard_annotation-spacing = disabled
 
 ktlint_compose_modifier-missing-check = disabled
 ktlint_compose_modifier-composed-check = disabled
-compose_allowed_composition_locals = LocalNavigator, LocalResultStore
 compose_disallow_unstable_collections = true
 compose_preview_naming_enabled = true
 compose_preview_naming_strategy = suffix

@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.compose.foundation.clickable
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -49,11 +49,12 @@ fun Modifier.voiceCommands(
  * @param size 명령어 개수
  * @param onCommandReceive 음성 명령어 인식시 실행할 동작
  */
+@Composable
 fun Modifier.voiceCommands(
   keyword: String,
   size: Int,
   onCommandReceive: (number: Int) -> Unit,
-): Modifier = composed {
+): Modifier {
   val context = LocalContext.current
   val onClickState: (Int) -> Unit by rememberUpdatedState(onCommandReceive)
 
@@ -93,7 +94,7 @@ fun Modifier.voiceCommands(
     }
   }
 
-  return@composed this@voiceCommands.clearAndSetSemantics {
+  return this@voiceCommands.clearAndSetSemantics {
     contentDescription = resultCommand
   }
 }

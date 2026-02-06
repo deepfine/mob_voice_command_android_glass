@@ -16,19 +16,9 @@ dependencies {
 
 gradlePlugin {
   plugins {
-    register("PresentationPlugin") {
-      id = "com.deepfine.presentation.plugin"
-      implementationClass = "PresentationConventionPlugin"
-    }
-
     register("AndroidPlugin") {
       id = "com.deepfine.android.plugin"
       implementationClass = "AndroidConventionPlugin"
-    }
-
-    register("HiltPlugin") {
-      id = "com.deepfine.hilt.plugin"
-      implementationClass = "HiltConventionPlugin"
     }
 
     register("ComposePlugin") {
