@@ -1,4 +1,4 @@
-import com.android.build.gradle.LibraryExtension
+import com.android.build.api.dsl.LibraryExtension
 import com.deepfine.convention.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -14,7 +14,6 @@ internal interface AndroidConvention : Plugin<Project> {
     with(target) {
       with(pluginManager) {
         apply("com.android.library")
-        apply("org.jetbrains.kotlin.android")
       }
 
       val extension = extensions.getByType<LibraryExtension>()
