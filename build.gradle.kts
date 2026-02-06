@@ -14,18 +14,12 @@ subprojects {
   apply(plugin = rootProject.libs.plugins.spotless.get().pluginId)
   configure<com.diffplug.gradle.spotless.SpotlessExtension> {
     kotlin {
-      target("**/*.kt")
-      targetExclude("${layout.buildDirectory}/**/*.kt")
-      ktlint().editorConfigOverride(
-        mapOf(
-          "indent_size" to "2",
-          "continuation_indent_size" to "2",
-          "ij_kotlin_allow_trailing_comma" to "true",
-          "ij_kotlin_allow_trailing_comma_on_call_site" to "true",
-          "ktlint_function_naming_ignore_when_annotated_with" to "Composable",
-          "ktlint_standard_no-unused-imports" to "enabled"
+      target("**/src/**/*.kt", "**/src/**/*.kts")
+      targetExclude("**/build/**", "**/generated/**")
+      ktlint()
+        .customRuleSets(
+          listOf(libs.spotless.composeRuleset.get().toString()),
         )
-      )
       trimTrailingWhitespace()
       endWithNewline()
     }

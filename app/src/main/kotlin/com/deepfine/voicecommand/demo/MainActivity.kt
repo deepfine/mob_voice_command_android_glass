@@ -88,8 +88,7 @@ private fun MainScreen() {
             showToast(context, resources.getString(R.string.main_settings_click_message))
             context.startActivity(Intent(ACTION_SETTINGS))
           },
-        )
-        .padding(
+        ).padding(
           horizontal = 12.dp,
           vertical = 8.dp,
         ),
@@ -116,8 +115,7 @@ private fun MainScreen() {
         .size(
           width = 320.dp,
           height = 160.dp,
-        )
-        .voiceCommands(
+        ).voiceCommands(
           keyword = stringResource(R.string.main_item_keyword),
           size = itemSize,
           onCommandReceive = { number ->

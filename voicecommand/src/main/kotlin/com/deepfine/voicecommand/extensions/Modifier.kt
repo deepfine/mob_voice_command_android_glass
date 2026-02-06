@@ -41,8 +41,7 @@ fun Modifier.voiceCommands(
       onClick()
       true
     }
-  }
-  .clickable(onClick = onClick)
+  }.clickable(onClick = onClick)
 
 /**
  * 특정 컴포넌트에 지정한 개수만큼의 음성 명령 추가(항목 %d 선택, %d번 보기, 줌레벨 %d 등 1 ~ n까지의 명령어)

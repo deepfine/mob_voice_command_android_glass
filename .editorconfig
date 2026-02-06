@@ -1,0 +1,29 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = off
+
+[*.{kt,kts}]
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+ktlint_standard_annotation = disabled
+ktlint_function_naming_ignore_when_annotated_with = Composable
+ktlint_class_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than = unset
+ktlint_function_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than = unset
+ktlint_argument-list-wrapping = disabled
+ktlint_standard_no-unused-imports = enabled
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_annotation-spacing = disabled
+
+ktlint_compose_modifier-missing-check = disabled
+ktlint_compose_modifier-composed-check = disabled
+compose_allowed_composition_locals = LocalNavigator, LocalResultStore
+compose_disallow_unstable_collections = true
+compose_preview_naming_enabled = true
+compose_preview_naming_strategy = suffix
