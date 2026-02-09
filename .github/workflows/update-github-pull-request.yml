@@ -1,0 +1,14 @@
+name: Update Github pull-request
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: read
+
+jobs:
+  call:
+    uses: deepfine/mob_github_workflows_android/.github/workflows/update-github-pull-request.yml@main
+    secrets: inherit
