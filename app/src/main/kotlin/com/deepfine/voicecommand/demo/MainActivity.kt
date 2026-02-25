@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.deepfine.voicecommand.extensions.hideVoiceGuidance
+import com.deepfine.voicecommand.extensions.voiceCommand
 import com.deepfine.voicecommand.extensions.voiceCommands
 import kotlinx.coroutines.launch
 
@@ -82,8 +83,10 @@ private fun MainScreen() {
       modifier = Modifier
         .background(color = Color.LightGray)
         .voiceCommands(
-          stringResource(R.string.main_option),
-          stringResource(R.string.main_settings),
+          keywords = arrayOf(
+            stringResource(R.string.main_option),
+            stringResource(R.string.main_settings),
+          ),
           onClick = {
             showToast(context, resources.getString(R.string.main_settings_click_message))
             context.startActivity(Intent(ACTION_SETTINGS))
@@ -146,8 +149,8 @@ private fun MainScreen() {
       val scope = rememberCoroutineScope()
 
       Text(
-        modifier = Modifier.voiceCommands(
-          stringResource(R.string.main_page_up),
+        modifier = Modifier.voiceCommand(
+          keyword = stringResource(R.string.main_page_up),
           onClick = {
             scope.launch {
               itemState.animateScrollToItem(0)
@@ -158,8 +161,8 @@ private fun MainScreen() {
         style = textStyle,
       )
       Text(
-        modifier = Modifier.voiceCommands(
-          stringResource(R.string.main_page_down),
+        modifier = Modifier.voiceCommand(
+          keyword = stringResource(R.string.main_page_down),
           onClick = {
             scope.launch {
               itemState.animateScrollToItem(itemSize - 1)

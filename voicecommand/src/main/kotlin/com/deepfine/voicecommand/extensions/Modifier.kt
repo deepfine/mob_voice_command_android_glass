@@ -25,6 +25,12 @@ import com.deepfine.voicecommand.utils.RealWear
  */
 fun Modifier.hideVoiceGuidance() = this@hideVoiceGuidance.semantics { contentDescription = RealWear.HF_HIDE_GUIDANCE }
 
+fun Modifier.voiceCommand(
+  enabled: Boolean = true,
+  keyword: String,
+  onClick: () -> Unit,
+): Modifier = voiceCommands(enabled = enabled, keywords = arrayOf(keyword), onClick = onClick)
+
 /**
  * 특정 컴포넌트에 음성 명령 추가, 복수의 명령어 지정 가능
  * ex) "확대", "학대", "크게", ...
@@ -32,16 +38,19 @@ fun Modifier.hideVoiceGuidance() = this@hideVoiceGuidance.semantics { contentDes
  * @param onClick 음성 명령어 인식시 실행할 동작
  */
 fun Modifier.voiceCommands(
+  enabled: Boolean = true,
   vararg keywords: String,
   onClick: () -> Unit,
 ): Modifier = this@voiceCommands
   .clearAndSetSemantics {
-    contentDescription = "${RealWear.HF_COMMANDS}:${keywords.joinToString(",", transform = RealWear::normalizeVoiceCommand)}"
-    onClick {
-      onClick()
-      true
+    if (enabled) {
+      contentDescription = "${RealWear.HF_COMMANDS}:${keywords.joinToString(",", transform = RealWear::normalizeVoiceCommand)}"
+      onClick {
+        onClick()
+        true
+      }
     }
-  }.clickable(onClick = onClick)
+  }.clickable(enabled = enabled, onClick = onClick)
 
 /**
  * 특정 컴포넌트에 지정한 개수만큼의 음성 명령 추가(항목 %d 선택, %d번 보기, 줌레벨 %d 등 1 ~ n까지의 명령어)
