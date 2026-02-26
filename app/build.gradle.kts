@@ -47,6 +47,7 @@ dependencies {
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.core.ktx)
   implementation(libs.splashScreen)
+  implementation(libs.vuzix)
 
   implementation(projects.voicecommand)
 }

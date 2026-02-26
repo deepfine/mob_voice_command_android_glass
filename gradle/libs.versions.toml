@@ -29,6 +29,8 @@ splash = "1.2.0"
 lifecycleRuntimeCompose = "2.10.0"
 agp = "9.0.1"
 
+vuzix = "1.97.1"
+
 [libraries]
 # Android
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -77,6 +79,9 @@ android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", ver
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 compose-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 spotless-composeRuleset = { group = "io.nlopez.compose.rules", name = "ktlint", version.ref = "spotlessComposeRuleset" }
+
+# Vuzix
+vuzix = { group = "com.vuzix", name = "sdk-speechrecognitionservice", version.ref = "vuzix" }
 
 [bundles]
 compose = ["androidx-compose-foundation", "androidx-compose-material3", "androidx-compose-runtime", "androidx-compose-ui", "androidx-compose-ui-graphics", "androidx-compose-ui-tooling", "androidx-compose-ui-tooling-preview", "androidx-compose-activity", "androidx-compose-navigation3-runtime", "androidx-compose-navigation3-ui", "androidx-hiltNavigationCompose", "compose-extensions", "androidx-compose-animation", "androidx-lifecycleRuntimeCompose"]

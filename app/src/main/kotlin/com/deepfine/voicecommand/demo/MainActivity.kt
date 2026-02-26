@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,8 +40,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.deepfine.voicecommand.engine.LocalVoiceEngine
+import com.deepfine.voicecommand.engine.RealWearEngine
+import com.deepfine.voicecommand.engine.VuzixEngine
 import com.deepfine.voicecommand.extensions.hideVoiceGuidance
 import com.deepfine.voicecommand.extensions.voiceCommands
+import com.deepfine.voicecommand.utils.isVuzixDevice
+import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -50,7 +56,17 @@ class MainActivity : AppCompatActivity() {
     installSplashScreen()
 
     setContent {
-      MainScreen()
+      val engine = remember {
+        if (isVuzixDevice()) {
+          VuzixEngine(speechClient = VuzixSpeechClient(this))
+        } else {
+          RealWearEngine
+        }
+      }
+
+      CompositionLocalProvider(LocalVoiceEngine provides engine) {
+        MainScreen()
+      }
     }
   }
 }
@@ -83,7 +99,6 @@ private fun MainScreen() {
         .background(color = Color.LightGray)
         .voiceCommands(
           stringResource(R.string.main_option),
-          stringResource(R.string.main_settings),
           onClick = {
             showToast(context, resources.getString(R.string.main_settings_click_message))
             context.startActivity(Intent(ACTION_SETTINGS))
@@ -118,6 +133,7 @@ private fun MainScreen() {
         ).voiceCommands(
           keyword = stringResource(R.string.main_item_keyword),
           size = itemSize,
+          index = selectedItemNumber ?: 0,
           onCommandReceive = { number ->
             selectedItemNumber = number
             showToast(context, resources.getString(R.string.main_item_click_message, number))
