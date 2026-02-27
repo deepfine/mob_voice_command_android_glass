@@ -59,7 +59,7 @@ jobs:
         id: extract_version
         shell: bash
         run: |
-          VERSION="v$(grep -E '^versionName\s*=' gradle/libs.versions.toml \
+          VERSION="$(grep -E '^versionName\s*=' gradle/libs.versions.toml \
             | sed -E 's/.* = \s*"([^"]+)".*/\1/')"
 
           if [ -z "$VERSION" ]; then
@@ -73,12 +73,12 @@ jobs:
       - name: Create and push git tag
         run: |
           TAG="${{ env.VERSION }}"
-          
+
           if git ls-remote --tags origin | grep -q "refs/tags/$TAG$"; then
             echo "❌ Remote tag $TAG already exists"
             exit 1
           fi
-          
+
           git tag "$TAG"
           git push origin "$TAG"
 
