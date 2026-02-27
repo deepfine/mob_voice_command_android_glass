@@ -1,6 +1,6 @@
 package com.deepfine.voicecommand.model
 
-enum class DeviceType {
+internal enum class DeviceType {
   VUZIX,
   REALWEAR,
   UNKNOWN,

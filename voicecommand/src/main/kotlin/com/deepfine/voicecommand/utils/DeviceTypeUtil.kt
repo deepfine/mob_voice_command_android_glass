@@ -3,7 +3,7 @@ package com.deepfine.voicecommand.utils
 import android.os.Build
 import com.deepfine.voicecommand.model.DeviceType
 
-object DeviceTypeUtil {
+internal object DeviceTypeUtil {
   val deviceModel = Build.MODEL.uppercase()
 
   private val vuzixModels = listOf("M400", "M4000", "Blade 2")

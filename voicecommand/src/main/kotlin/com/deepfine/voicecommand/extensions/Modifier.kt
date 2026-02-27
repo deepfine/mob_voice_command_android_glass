@@ -1,13 +1,11 @@
 package com.deepfine.voicecommand.extensions
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
@@ -29,7 +27,9 @@ import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.core.content.ContextCompat
 import com.deepfine.voicecommand.engine.RealWearEngine
+import com.deepfine.voicecommand.engine.VoiceCommandEngine
 import com.deepfine.voicecommand.engine.VuzixEngine
+import com.deepfine.voicecommand.engine.rememberVoiceCommandEngine
 import com.deepfine.voicecommand.model.DeviceType
 import com.deepfine.voicecommand.utils.DeviceTypeUtil
 import com.deepfine.voicecommand.utils.RealWear
@@ -39,7 +39,61 @@ import kotlinx.coroutines.launch
  * 리얼웨어 기기 화면에 기본적으로 표시되는 우측 하단 도움말 및
  * 클릭 가능한 UI 컴포넌트의 "항목 N 선택" 숫자 배지 숨김 처리
  */
-fun Modifier.hideVoiceGuidance() = this@hideVoiceGuidance.semantics { contentDescription = RealWear.HF_HIDE_GUIDANCE }
+private fun Modifier.hideVoiceGuidance() = this@hideVoiceGuidance.semantics { contentDescription = RealWear.HF_HIDE_GUIDANCE }
+
+@Composable
+fun Modifier.voiceCommand(
+  keyword: String,
+  onClick: () -> Unit,
+  enabled: Boolean = true,
+): Modifier {
+  val context = LocalContext.current
+  val activity = LocalActivity.current
+
+  val engine = rememberVoiceCommandEngine(activity)
+  val onClickState by rememberUpdatedState(onClick)
+
+  if (engine is VuzixEngine) {
+    DisposableEffect(context, engine) {
+      val receiver = object : VoiceCommandEngine.VoiceCommandReceiver(engine) {
+        override fun onCommandReceive(command: String) {
+          if (engine.matches(keyword, command)) {
+            onClickState()
+          }
+        }
+      }
+
+      ContextCompat.registerReceiver(
+        context,
+        receiver,
+        IntentFilter(engine.action),
+        ContextCompat.RECEIVER_EXPORTED,
+      )
+
+      onDispose {
+        context.unregisterReceiver(receiver)
+      }
+    }
+  }
+
+  return when (engine) {
+    is RealWearEngine, is VuzixEngine -> {
+      this.clearAndSetSemantics {
+        if (enabled) {
+          contentDescription = engine.normalize(keyword)
+          onClick {
+            onClick()
+            true
+          }
+        }
+      }
+    }
+
+    else -> {
+      throw RuntimeException()
+    }
+  }
+}
 
 /**
  * 특정 컴포넌트에 음성 명령 추가, 복수의 명령어 지정 가능
@@ -51,76 +105,53 @@ fun Modifier.hideVoiceGuidance() = this@hideVoiceGuidance.semantics { contentDes
 fun Modifier.voiceCommands(
   vararg keywords: String,
   onClick: () -> Unit,
+  enabled: Boolean = true,
 ): Modifier {
   val context = LocalContext.current
   val activity = LocalActivity.current
 
-  val engine = remember {
-    when (DeviceTypeUtil.getDeviceType()) {
-      DeviceType.VUZIX -> VuzixEngine(activity = activity)
-      DeviceType.REALWEAR -> RealWearEngine
-      DeviceType.UNKNOWN -> null
-    }
-  }
+  val engine = rememberVoiceCommandEngine(activity)
 
   val onClickState by rememberUpdatedState(onClick)
 
-  val receiver = remember(engine) {
-    object : BroadcastReceiver() {
-      override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == engine?.action) {
-          val command = intent.getStringExtra(engine?.extraKey) ?: return
-
-          if (keywords.any { engine!!.matches(it, command) }) {
+  if (engine is VuzixEngine) {
+    DisposableEffect(context, engine) {
+      val receiver = object : VoiceCommandEngine.VoiceCommandReceiver(engine) {
+        override fun onCommandReceive(command: String) {
+          if (keywords.any { engine.matches(it, command) }) {
             onClickState()
           }
         }
       }
-    }
-  }
 
-  DisposableEffect(context, engine) {
-    ContextCompat.registerReceiver(
-      context,
-      receiver,
-      IntentFilter(engine?.action),
-      ContextCompat.RECEIVER_EXPORTED,
-    )
+      ContextCompat.registerReceiver(
+        context,
+        receiver,
+        IntentFilter(engine.action),
+        ContextCompat.RECEIVER_EXPORTED,
+      )
 
-    onDispose {
-      context.unregisterReceiver(receiver)
+      onDispose {
+        context.unregisterReceiver(receiver)
+      }
     }
   }
 
   return when (engine) {
-    is RealWearEngine -> {
+    is RealWearEngine, is VuzixEngine -> {
       this.clearAndSetSemantics {
-        contentDescription = "${RealWear.HF_COMMANDS}:${
-          keywords.joinToString(",") {
-            engine.normalize(it)
+        if (enabled) {
+          contentDescription = engine.normalize(keywords.toList().toTypedArray())
+          onClick {
+            onClick()
+            true
           }
-        }"
-        onClick {
-          onClick()
-          true
-        }
-      }
-    }
-
-    is VuzixEngine -> {
-      this.clearAndSetSemantics {
-        contentDescription = keywords.joinToString(",") {
-          engine.normalize(it)
-        }
-        onClick {
-          onClick()
-          true
         }
       }
     }
 
     else -> {
-      throw RuntimeException()
+      this.clickable(enabled = enabled, onClick = onClick)
     }
   }
 }
@@ -136,17 +167,12 @@ fun Modifier.voiceCommands(
   keyword: String,
   size: Int,
   onCommandReceive: (Int) -> Unit,
+  enabled: Boolean = true,
 ): Modifier {
   val context = LocalContext.current
   val activity = LocalActivity.current
 
-  val engine = remember {
-    when (DeviceTypeUtil.getDeviceType()) {
-      DeviceType.VUZIX -> VuzixEngine(activity = activity)
-      DeviceType.REALWEAR -> RealWearEngine
-      DeviceType.UNKNOWN -> null
-    }
-  }
+  val engine = rememberVoiceCommandEngine(activity)
 
   val onClickState by rememberUpdatedState(onCommandReceive)
 
@@ -156,23 +182,17 @@ fun Modifier.voiceCommands(
     }
   }
 
-  val receiver = remember(engine) {
-    object : BroadcastReceiver() {
-      override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == engine?.action) {
-          val command = intent.getStringExtra(engine?.extraKey) ?: return
-
-          if (expandedKeywords.any { engine!!.matches(it, command) }) {
-            command.firstNumber()?.let {
-              onClickState(it)
-            }
+  DisposableEffect(context, engine) {
+    val receiver = object : VoiceCommandEngine.VoiceCommandReceiver(engine) {
+      override fun onCommandReceive(command: String) {
+        if (expandedKeywords.any { engine!!.matches(it, command) }) {
+          command.firstNumber()?.let {
+            onClickState(it)
           }
         }
       }
     }
-  }
 
-  DisposableEffect(context, engine) {
     ContextCompat.registerReceiver(
       context,
       receiver,
@@ -186,35 +206,18 @@ fun Modifier.voiceCommands(
   }
 
   return when (engine) {
-    is RealWearEngine -> {
-      val resultCommand = buildString {
-        append(RealWear.HF_ADD_COMMANDS)
-        expandedKeywords.forEach {
-          append(engine.normalize(it))
-          append("|")
+    is RealWearEngine, is VuzixEngine -> {
+      if (enabled) {
+        this.clearAndSetSemantics {
+          contentDescription = engine.normalize(expandedKeywords.toTypedArray())
         }
-      }
-
-      this.clearAndSetSemantics {
-        contentDescription = resultCommand
-      }
-    }
-
-    is VuzixEngine -> {
-      val resultCommand = buildString {
-        expandedKeywords.forEach {
-          append(engine.normalize(it))
-          append("|")
-        }
-      }
-
-      this.clearAndSetSemantics {
-        contentDescription = resultCommand
+      } else {
+        this
       }
     }
 
     else -> {
-      throw RuntimeException()
+      this
     }
   }
 }
@@ -223,72 +226,73 @@ private fun String.firstNumber(): Int? = Regex("\\d+").find(this)?.value?.toInt(
 
 private const val TAG = "speech"
 
-fun Modifier.iterateVoiceCommands() = this.composed {
-  val view = LocalView.current
-  val activity = LocalActivity.current
-  val scope = rememberCoroutineScope()
+fun Modifier.commandRoot(): Modifier = when (DeviceTypeUtil.getDeviceType()) {
+  DeviceType.VUZIX -> iterateVoiceCommands()
+  DeviceType.REALWEAR -> hideVoiceGuidance()
+  DeviceType.UNKNOWN -> this
+}
 
-  val engine = remember {
-    when (DeviceTypeUtil.getDeviceType()) {
-      DeviceType.VUZIX -> VuzixEngine(activity = activity)
-      DeviceType.REALWEAR -> RealWearEngine
-      DeviceType.UNKNOWN -> null
+private fun Modifier.iterateVoiceCommands() = this
+  .composed {
+    val view = LocalView.current
+    val activity = LocalActivity.current
+    val scope = rememberCoroutineScope()
+
+    val engine = rememberVoiceCommandEngine(activity)
+
+    fun iterateContentDescriptions() {
+      scope.launch {
+        withFrameNanos { }
+        val keywords = getSemanticsNodesFromView(view)?.mapNotNull {
+          it.config.getOrNull(SemanticsProperties.ContentDescription)?.firstOrNull()
+        } ?: return@launch
+
+        val processedKeywords = mutableListOf<String>()
+        keywords.forEach { keyword ->
+          if (keyword.contains("|")) {
+            processedKeywords.addAll(keyword.split("|"))
+          } else {
+            processedKeywords.add(keyword)
+          }
+        }
+
+        if (engine is VuzixEngine && processedKeywords.isNotEmpty()) {
+          Log.d(TAG, processedKeywords.joinToString("|") { engine.normalize(it) })
+          engine.clearPhrases()
+          engine.registerPhrases(
+            processedKeywords
+              .map { engine.normalize(it) }
+              .filter(String::isNotEmpty),
+          )
+        }
+      }
     }
-  }
 
-  fun iterateContentDescriptions() {
-    scope.launch {
-      withFrameNanos { }
-      val keywords = getSemanticsNodesFromView(view)?.mapNotNull {
-        it.config.getOrNull(SemanticsProperties.ContentDescription)?.firstOrNull()
-      } ?: return@launch
+    SideEffect {
+      iterateContentDescriptions()
+    }
 
-      val processedKeywords = mutableListOf<String>()
-      keywords.forEach { keyword ->
-        if (keyword.contains("|")) {
-          processedKeywords.addAll(keyword.split("|"))
-        } else {
-          processedKeywords.add(keyword)
+    DisposableEffect(view) {
+      var focusLost = false
+      val listener = ViewTreeObserver.OnWindowFocusChangeListener { hasFocus ->
+        if (hasFocus && focusLost) {
+          iterateContentDescriptions()
+        } else if (!hasFocus) {
+          focusLost = true
         }
       }
 
-      if (engine is VuzixEngine && processedKeywords.isNotEmpty()) {
-        Log.d(TAG, processedKeywords.joinToString("|") { engine.normalize(it) })
-        engine.clearPhrases()
-        engine.registerPhrases(
-          processedKeywords
-            .map { engine.normalize(it) }
-            .filter(String::isNotEmpty),
-        )
-      }
-    }
-  }
+      view.viewTreeObserver.addOnWindowFocusChangeListener(listener)
 
-  SideEffect {
-    iterateContentDescriptions()
-  }
-
-  DisposableEffect(view) {
-    var focusLost = false
-    val listener = ViewTreeObserver.OnWindowFocusChangeListener { hasFocus ->
-      if (hasFocus && focusLost) {
-        iterateContentDescriptions()
-      } else if (!hasFocus) {
-        focusLost = true
+      onDispose {
+        view.viewTreeObserver.removeOnWindowFocusChangeListener(listener)
       }
     }
 
-    view.viewTreeObserver.addOnWindowFocusChangeListener(listener)
-
-    onDispose {
-      view.viewTreeObserver.removeOnWindowFocusChangeListener(listener)
-    }
+    this
   }
 
-  this
-}
-
-fun getSemanticsNodesFromView(view: View): List<SemanticsNode>? {
+private fun getSemanticsNodesFromView(view: View): List<SemanticsNode>? {
   return try {
     val clazz = Class.forName("androidx.compose.ui.platform.AndroidComposeView")
     if (!clazz.isInstance(view)) return null

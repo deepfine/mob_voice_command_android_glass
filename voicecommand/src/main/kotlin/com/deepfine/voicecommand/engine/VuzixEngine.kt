@@ -3,7 +3,7 @@ package com.deepfine.voicecommand.engine
 import android.app.Activity
 import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient
 
-class VuzixEngine(activity: Activity?) : VoiceCommandEngine {
+internal class VuzixEngine(activity: Activity?) : VoiceCommandEngine {
   private val speechClient = VuzixSpeechClient(activity)
 
   override val action = VuzixSpeechClient.ACTION_VOICE_COMMAND
@@ -21,16 +21,19 @@ class VuzixEngine(activity: Activity?) : VoiceCommandEngine {
 
   override fun normalize(keyword: String) = keyword
 
+  override fun normalize(keywords: Array<String>): String =
+    keywords.joinToString(",")
+
   override fun matches(keyword: String, command: String): Boolean = keyword.replace(" ", "") == command
 
-  override fun registerPhrases(phrases: List<String>) {
+  internal fun registerPhrases(phrases: List<String>) {
     phrases.forEach { phrase ->
       val substitution = phrase.replace(" ", "")
       speechClient.insertPhrase(phrase, substitution)
     }
   }
 
-  override fun clearPhrases() {
+  internal fun clearPhrases() {
     speechClient.deleteAllPhrases()
   }
 }
