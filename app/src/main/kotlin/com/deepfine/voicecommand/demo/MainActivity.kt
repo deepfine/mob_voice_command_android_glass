@@ -39,7 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.deepfine.voicecommand.extensions.hideVoiceGuidance
+import com.deepfine.voicecommand.extensions.commandRoot
 import com.deepfine.voicecommand.extensions.voiceCommand
 import com.deepfine.voicecommand.extensions.voiceCommands
 import kotlinx.coroutines.launch
@@ -61,7 +61,7 @@ private fun MainScreen() {
   Column(
     modifier = Modifier
       .fillMaxWidth()
-      .hideVoiceGuidance()
+      .commandRoot()
       .padding(vertical = 4.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -83,10 +83,7 @@ private fun MainScreen() {
       modifier = Modifier
         .background(color = Color.LightGray)
         .voiceCommands(
-          keywords = arrayOf(
-            stringResource(R.string.main_option),
-            stringResource(R.string.main_settings),
-          ),
+          keywords = arrayOf("설정", "옵션"),
           onClick = {
             showToast(context, resources.getString(R.string.main_settings_click_message))
             context.startActivity(Intent(ACTION_SETTINGS))
