@@ -8,8 +8,15 @@ internal object RealWearEngine : VoiceCommandEngine {
 
   override fun normalize(keyword: String) = "${RealWear.HF_COMMANDS}:${RealWear.normalizeVoiceCommand(keyword)}"
 
-  override fun normalize(keywords: Array<String>): String =
-    "${RealWear.HF_COMMANDS}:${keywords.joinToString("|") { RealWear.normalizeVoiceCommand(it) }}"
+  override fun normalize(keywords: Array<String>, separator: CharSequence): String {
+    val commandSeparator = when (separator) {
+      "|" -> RealWear.HF_ADD_COMMANDS
+      "," -> RealWear.HF_COMMANDS
+      else -> throw RuntimeException("Unsupported separator")
+    }
+
+    return "$commandSeparator:${keywords.joinToString(separator) { RealWear.normalizeVoiceCommand(it) }}"
+  }
 
   override fun matches(keyword: String, command: String) = RealWear.matchesVoiceCommand(keyword, command)
 }

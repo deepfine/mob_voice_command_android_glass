@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
  * 리얼웨어 기기 화면에 기본적으로 표시되는 우측 하단 도움말 및
  * 클릭 가능한 UI 컴포넌트의 "항목 N 선택" 숫자 배지 숨김 처리
  */
+@Composable
 private fun Modifier.hideVoiceGuidance() = this@hideVoiceGuidance.semantics { contentDescription = RealWear.HF_HIDE_GUIDANCE }
 
 @Composable
@@ -141,7 +142,7 @@ fun Modifier.voiceCommands(
     is RealWearEngine, is VuzixEngine -> {
       this.clearAndSetSemantics {
         if (enabled) {
-          contentDescription = engine.normalize(keywords.toList().toTypedArray())
+          contentDescription = engine.normalize(keywords.toList().toTypedArray(), separator = ",")
           onClick {
             onClick()
             true
@@ -222,16 +223,14 @@ fun Modifier.voiceCommands(
   }
 }
 
-private fun String.firstNumber(): Int? = Regex("\\d+").find(this)?.value?.toInt()
-
-private const val TAG = "speech"
-
+@Composable
 fun Modifier.commandRoot(): Modifier = when (DeviceTypeUtil.getDeviceType()) {
   DeviceType.VUZIX -> iterateVoiceCommands()
   DeviceType.REALWEAR -> hideVoiceGuidance()
   DeviceType.UNKNOWN -> this
 }
 
+@Composable
 private fun Modifier.iterateVoiceCommands() = this
   .composed {
     val view = LocalView.current
@@ -319,3 +318,7 @@ private fun getSemanticsNodesFromView(view: View): List<SemanticsNode>? {
     null
   }
 }
+
+private const val TAG = "speech"
+
+private fun String.firstNumber(): Int? = Regex("\\d+").find(this)?.value?.toInt()

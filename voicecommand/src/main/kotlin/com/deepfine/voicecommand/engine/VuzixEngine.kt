@@ -21,8 +21,8 @@ internal class VuzixEngine(activity: Activity?) : VoiceCommandEngine {
 
   override fun normalize(keyword: String) = keyword
 
-  override fun normalize(keywords: Array<String>): String =
-    keywords.joinToString(",")
+  override fun normalize(keywords: Array<String>, separator: CharSequence): String =
+    keywords.joinToString(separator)
 
   override fun matches(keyword: String, command: String): Boolean = keyword.replace(" ", "") == command
 

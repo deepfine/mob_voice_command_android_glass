@@ -38,7 +38,7 @@ internal object RealWear {
 
   const val ACTION_SPEECH_EVENT = "com.realwear.wearhf.intent.action.SPEECH_EVENT"
   const val EXTRA_SPEECH_COMMAND = "command"
-  const val HF_ADD_COMMANDS = "hf_add_commands:"
-  const val HF_COMMANDS = "hf_commands:"
+  const val HF_ADD_COMMANDS = "hf_add_commands"
+  const val HF_COMMANDS = "hf_commands"
   const val HF_HIDE_GUIDANCE = "hf_no_number|hf_hide_help"
 }

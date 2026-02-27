@@ -15,7 +15,7 @@ internal interface VoiceCommandEngine {
 
   fun normalize(keyword: String): String
 
-  fun normalize(keywords: Array<String>): String
+  fun normalize(keywords: Array<String>, separator: CharSequence = "|"): String
 
   fun matches(keyword: String, command: String): Boolean
 

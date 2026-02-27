@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.deepfine.voicecommand.extensions.commandRoot
 import com.deepfine.voicecommand.extensions.voiceCommand
+import com.deepfine.voicecommand.extensions.voiceCommands
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -81,8 +82,8 @@ private fun MainScreen() {
     Box(
       modifier = Modifier
         .background(color = Color.LightGray)
-        .voiceCommand(
-          keyword = stringResource(R.string.main_option),
+        .voiceCommands(
+          keywords = arrayOf("설정", "옵션"),
           onClick = {
             showToast(context, resources.getString(R.string.main_settings_click_message))
             context.startActivity(Intent(ACTION_SETTINGS))
@@ -114,6 +115,13 @@ private fun MainScreen() {
         .size(
           width = 320.dp,
           height = 160.dp,
+        ).voiceCommands(
+          keyword = stringResource(R.string.main_item_keyword),
+          size = itemSize,
+          onCommandReceive = { number ->
+            selectedItemNumber = number
+            showToast(context, resources.getString(R.string.main_item_click_message, number))
+          },
         ),
       state = itemState,
     ) {
