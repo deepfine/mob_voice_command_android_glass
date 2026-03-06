@@ -79,15 +79,16 @@ fun Modifier.voiceCommand(
 
   return when (engine) {
     is RealWearEngine, is VuzixEngine -> {
-      this.clearAndSetSemantics {
-        if (enabled) {
-          contentDescription = engine.normalize(keyword)
-          onClick {
-            onClick()
-            true
+      this
+        .clearAndSetSemantics {
+          if (enabled) {
+            contentDescription = engine.normalize(keyword)
+            onClick {
+              onClick()
+              true
+            }
           }
-        }
-      }
+        }.clickable(enabled = enabled, onClick = onClick)
     }
 
     else -> {
@@ -140,15 +141,16 @@ fun Modifier.voiceCommands(
 
   return when (engine) {
     is RealWearEngine, is VuzixEngine -> {
-      this.clearAndSetSemantics {
-        if (enabled) {
-          contentDescription = engine.normalize(keywords.toList().toTypedArray(), separator = ",")
-          onClick {
-            onClick()
-            true
+      this
+        .clearAndSetSemantics {
+          if (enabled) {
+            contentDescription = engine.normalize(keywords.toList().toTypedArray(), separator = ",")
+            onClick {
+              onClick()
+              true
+            }
           }
-        }
-      }
+        }.clickable(enabled = enabled, onClick = onClick)
     }
 
     else -> {
