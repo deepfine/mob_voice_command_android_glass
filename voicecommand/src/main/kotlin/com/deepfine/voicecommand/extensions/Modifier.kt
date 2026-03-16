@@ -17,6 +17,7 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.SemanticsNode
 import androidx.compose.ui.semantics.SemanticsProperties
@@ -50,8 +51,9 @@ fun Modifier.voiceCommand(
 ): Modifier {
   val context = LocalContext.current
   val activity = LocalActivity.current
+  val isInPreview = LocalInspectionMode.current
 
-  val engine = rememberVoiceCommandEngine(activity)
+  val engine = if (isInPreview) null else rememberVoiceCommandEngine(activity)
   val onClickState by rememberUpdatedState(onClick)
 
   if (engine is VuzixEngine) {
@@ -92,7 +94,7 @@ fun Modifier.voiceCommand(
     }
 
     else -> {
-      throw RuntimeException()
+      this.clickable(enabled = enabled, onClick = onClick)
     }
   }
 }
@@ -111,8 +113,9 @@ fun Modifier.voiceCommands(
 ): Modifier {
   val context = LocalContext.current
   val activity = LocalActivity.current
+  val isInPreview = LocalInspectionMode.current
 
-  val engine = rememberVoiceCommandEngine(activity)
+  val engine = if (isInPreview) null else rememberVoiceCommandEngine(activity)
 
   val onClickState by rememberUpdatedState(onClick)
 
@@ -174,8 +177,9 @@ fun Modifier.voiceCommands(
 ): Modifier {
   val context = LocalContext.current
   val activity = LocalActivity.current
+  val isInPreview = LocalInspectionMode.current
 
-  val engine = rememberVoiceCommandEngine(activity)
+  val engine = if (isInPreview) null else rememberVoiceCommandEngine(activity)
 
   val onClickState by rememberUpdatedState(onCommandReceive)
 
