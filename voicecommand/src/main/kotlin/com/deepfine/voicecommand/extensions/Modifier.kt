@@ -190,25 +190,29 @@ fun Modifier.voiceCommands(
   }
 
   DisposableEffect(context, engine) {
-    val receiver = object : VoiceCommandEngine.VoiceCommandReceiver(engine) {
-      override fun onCommandReceive(command: String) {
-        if (expandedKeywords.any { engine!!.matches(it, command) }) {
-          command.firstNumber()?.let {
-            onClickState(it)
+    val receiver = engine?.let {
+      object : VoiceCommandEngine.VoiceCommandReceiver(engine) {
+        override fun onCommandReceive(command: String) {
+          if (expandedKeywords.any { engine.matches(it, command) }) {
+            command.firstNumber()?.let {
+              onClickState(it)
+            }
           }
         }
       }
     }
 
-    ContextCompat.registerReceiver(
-      context,
-      receiver,
-      IntentFilter(engine?.action),
-      ContextCompat.RECEIVER_EXPORTED,
-    )
+    if (receiver != null) {
+      ContextCompat.registerReceiver(
+        context,
+        receiver,
+        IntentFilter(engine.action),
+        ContextCompat.RECEIVER_EXPORTED,
+      )
+    }
 
     onDispose {
-      context.unregisterReceiver(receiver)
+      receiver?.let(context::unregisterReceiver)
     }
   }
 
