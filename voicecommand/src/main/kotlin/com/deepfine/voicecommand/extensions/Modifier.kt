@@ -84,7 +84,7 @@ fun Modifier.voiceCommand(
       this
         .clearAndSetSemantics {
           if (enabled) {
-            contentDescription = engine.normalize(keyword)
+            contentDescription = keyword
             onClick {
               onClick()
               true
