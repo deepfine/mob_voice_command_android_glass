@@ -9,7 +9,7 @@ versionName = "1.0.5"
 
 appcompat = "1.7.1"
 kotlin = "2.3.20"
-kotlinSerialization = "1.10.0"
+kotlinSerialization = "1.11.0"
 ksp = "2.3.6"
 coreKtx = "1.18.0"
 activityCompose = "1.13.0"
