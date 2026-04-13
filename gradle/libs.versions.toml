@@ -27,7 +27,7 @@ spotless = "8.4.0"
 spotlessComposeRuleset = "0.5.7"
 splash = "1.2.0"
 lifecycleRuntimeCompose = "2.10.0"
-agp = "9.1.0"
+agp = "9.1.1"
 
 vuzix = "1.97.1"
 
