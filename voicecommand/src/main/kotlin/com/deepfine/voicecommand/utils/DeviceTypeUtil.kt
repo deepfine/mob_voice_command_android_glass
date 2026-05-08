@@ -6,7 +6,7 @@ import com.deepfine.voicecommand.model.DeviceType
 internal object DeviceTypeUtil {
   val deviceModel = Build.MODEL.uppercase()
 
-  private val vuzixModels = setOf("Blade 2", "M400", "M4000")
+  private val vuzixModels = setOf("vuzix Blade 2", "M400", "M4000")
   private val realWearModels = setOf("T1100G", "T1200G", "T21G", "A31G")
 
   private val isVuzix: Boolean = vuzixModels.any { deviceModel.contains(it) }
