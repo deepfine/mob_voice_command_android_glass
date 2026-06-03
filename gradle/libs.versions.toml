@@ -8,7 +8,7 @@ versionCode = "1"
 versionName = "1.0.7"
 
 appcompat = "1.7.1"
-kotlin = "2.3.21"
+kotlin = "2.4.0"
 kotlinSerialization = "1.11.0"
 ksp = "2.3.9"
 coreKtx = "1.18.0"
